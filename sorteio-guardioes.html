@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Convocação dos Guardiões | Oficina do Excel</title>
+<style>
+  :root{
+    --verde:#217146;
+    --verde-claro:#2f9e5f;
+    --verde-escuro:#164d30;
+    --azul:#4A6E80;
+    --cinza:#617077;
+    --bg:#eef6f0;
+    --ouro:#e0a800;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+    color:#1d2b24;
+    min-height:100vh;
+    background:
+      radial-gradient(circle at 15% 20%, rgba(47,158,95,.10), transparent 40%),
+      radial-gradient(circle at 85% 80%, rgba(74,110,128,.10), transparent 45%),
+      linear-gradient(135deg,#ffffff 0%, var(--bg) 55%, #dbeee2 100%);
+    display:flex;flex-direction:column;
+  }
+
+  /* ---- Cabeçalho ---- */
+  header{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:22px 40px;
+    border-bottom:3px solid var(--verde);
+    background:rgba(255,255,255,.65);
+    backdrop-filter:blur(4px);
+  }
+  .marca{font-size:34px;font-weight:800;color:var(--verde);letter-spacing:-1px}
+  .marca span{color:var(--azul);font-weight:600;font-size:15px;display:block;letter-spacing:.5px;margin-top:-4px}
+  .data{font-size:14px;color:var(--cinza);font-weight:600}
+
+  main{flex:1;display:flex;justify-content:center;padding:32px 20px}
+  .wrap{width:100%;max-width:960px}
+
+  /* ---- Título ---- */
+  .topo{text-align:center;margin-bottom:22px}
+  .selo{
+    display:inline-block;background:var(--verde);color:#fff;
+    font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+    padding:7px 16px;border-radius:30px;margin-bottom:14px;
+  }
+  h1{font-size:34px;line-height:1.12;color:var(--verde-escuro)}
+  h1 em{font-style:normal;color:var(--azul)}
+  .sub{font-size:16px;color:var(--cinza);margin-top:8px}
+
+  /* ---- Card principal ---- */
+  .card{
+    background:#fff;border:1px solid #d6e6dc;border-radius:20px;
+    box-shadow:0 22px 55px -22px rgba(22,77,48,.32);
+    padding:30px 30px 34px;
+  }
+  label{display:block;font-weight:700;color:var(--verde-escuro);margin-bottom:8px;font-size:15px}
+  #lista-nomes{
+    width:100%;padding:14px;border:2px solid #cfe3d6;border-radius:12px;
+    background:#f7fbf8;color:#1d2b24;font-size:15px;line-height:1.5;resize:vertical;
+    font-family:inherit;
+  }
+  #lista-nomes:focus{outline:none;border-color:var(--verde-claro);background:#fff}
+
+  #btn-sortear{
+    display:flex;align-items:center;justify-content:center;gap:12px;
+    background:linear-gradient(135deg,var(--verde-claro),var(--verde));
+    color:#fff;font-size:18px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;
+    border:none;border-radius:14px;padding:16px;cursor:pointer;width:100%;margin-top:18px;
+    box-shadow:0 12px 24px -8px rgba(33,113,70,.6);
+    transition:transform .15s, box-shadow .15s, filter .2s;
+  }
+  #btn-sortear:hover{transform:translateY(-2px);box-shadow:0 18px 30px -8px rgba(33,113,70,.65)}
+  #btn-sortear:active{transform:translateY(0)}
+  #btn-sortear svg{width:22px;height:22px}
+
+  /* ---- Resultado ---- */
+  #resultado{
+    margin-top:22px;min-height:70px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:30px;font-weight:800;color:var(--verde);text-align:center;
+    background:#f2f9f4;border:2px dashed #bfe0cc;border-radius:14px;padding:16px;
+    transition:transform .25s;
+  }
+  #resultado.pop{animation:pop .5s ease}
+  @keyframes pop{0%{transform:scale(.85);opacity:.4}60%{transform:scale(1.06)}100%{transform:scale(1)}}
+  #resultado .vazio{color:#9db3a6;font-size:17px;font-weight:600;font-style:italic}
+
+  /* ---- Grid inferior ---- */
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:22px}
+  .painel{border:1px solid #d6e6dc;border-radius:16px;padding:20px;background:#fff}
+  .painel h3{font-size:16px;color:var(--verde-escuro);margin-bottom:6px;display:flex;align-items:center;gap:8px}
+  .contador{
+    font-size:44px;font-weight:800;color:var(--verde);line-height:1;margin:6px 0 4px;
+  }
+  .painel small{color:var(--cinza);font-size:13px}
+  #historico{list-style:none;margin-top:6px;max-height:220px;overflow:auto;counter-reset:h}
+  #historico li{
+    counter-increment:h;
+    display:flex;align-items:center;gap:10px;
+    padding:8px 10px;border-radius:10px;margin-bottom:6px;
+    background:#f2f9f4;border:1px solid #dcecdf;font-weight:600;color:var(--verde-escuro);
+    animation:slide .3s ease;
+  }
+  #historico li::before{
+    content:counter(h);
+    background:var(--verde);color:#fff;width:24px;height:24px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;font-size:13px;flex:0 0 auto;
+  }
+  @keyframes slide{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:translateX(0)}}
+  #historico .none{background:transparent;border:none;color:#9db3a6;font-style:italic;font-weight:500}
+  #historico .none::before{display:none}
+
+  .acoes{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+  .btn-sec{
+    flex:1;min-width:130px;background:#fff;color:var(--verde);border:2px solid var(--verde);
+    border-radius:12px;padding:11px;font-weight:700;font-size:14px;cursor:pointer;transition:.2s;
+  }
+  .btn-sec:hover{background:var(--verde);color:#fff}
+  .btn-sec.reset{color:var(--cinza);border-color:#c9d6cf}
+  .btn-sec.reset:hover{background:var(--cinza);color:#fff;border-color:var(--cinza)}
+
+  footer{
+    text-align:center;padding:16px;color:var(--cinza);font-size:12.5px;
+    border-top:1px solid #d6e6dc;background:rgba(255,255,255,.5);margin-top:20px;
+  }
+  footer .marca-f{color:var(--verde);font-weight:800}
+
+  .header-dir{display:flex;align-items:center;gap:16px}
+  .btn-voltar{
+    display:inline-flex;align-items:center;gap:8px;
+    background:#fff;color:var(--verde);border:2px solid var(--verde);
+    border-radius:12px;padding:9px 16px;font-weight:700;font-size:14px;
+    text-decoration:none;transition:.2s;
+  }
+  .btn-voltar:hover{background:var(--verde);color:#fff}
+  .btn-voltar svg{width:18px;height:18px}
+  @media(max-width:720px){
+    .header-dir{flex-direction:column;gap:6px;align-items:flex-end}
+    .btn-voltar{padding:8px 12px;font-size:13px}
+  }
+
+  @media(max-width:720px){
+    .grid{grid-template-columns:1fr}
+    header{padding:18px 22px}
+    h1{font-size:27px}
+    #resultado{font-size:24px}
+  }
+</style>
+</head>
+<body>
+
+  <header>
+    <div class="marca">Libbs<span>Oficina do Excel</span></div>
+    <div class="header-dir">
+      <a class="btn-voltar" href="index.html" role="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+        Voltar / Baixar planilha
+      </a>
+      <div class="data">Maio / 2026</div>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+
+      <div class="topo">
+        <div class="selo">⚔️ Mundo 1 — A Fortaleza das Fórmulas</div>
+        <h1>Convocação dos <em>Guardiões</em></h1>
+        <p class="sub">Sorteie quem enfrentará o próximo desafio. Cada Guardião convocado sai da fila e não repete!</p>
+      </div>
+
+      <div class="card">
+        <label for="lista-nomes">📜 Lista de aventureiros ativos (um nome por linha)</label>
+        <textarea id="lista-nomes" rows="6" placeholder="Cole aqui os nomes dos participantes, um por linha..." oninput="atualizarContagem()"></textarea>
+
+        <button id="btn-sortear">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h5l4 6-4 6H3"/><path d="M21 3h-5l-9 12H3"/><path d="M14 15l7 6"/><path d="M17 21h4v-4"/></svg>
+          Convocar Guardião
+        </button>
+
+        <div id="resultado"><span class="vazio">Aguardando a convocação…</span></div>
+
+        <div class="grid">
+          <div class="painel">
+            <h3>🛡️ Aventureiros restantes</h3>
+            <div class="contador" id="count">0</div>
+            <small>Ainda disponíveis na jornada ativa.</small>
+          </div>
+          <div class="painel">
+            <h3>🏆 Convocados (não repetem)</h3>
+            <ol id="historico"><li class="none">Ninguém convocado ainda.</li></ol>
+          </div>
+        </div>
+
+        <div class="acoes">
+          <button class="btn-sec" id="btn-desfazer">↩️ Desfazer último</button>
+          <button class="btn-sec reset" id="btn-limpar">🧹 Reiniciar tudo</button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <span class="marca-f">Libbs</span> • Desenvolvimento de Talentos — Oficina do Excel. Documento interno.
+    &nbsp;|&nbsp; <a href="index.html" style="color:var(--verde);font-weight:700;text-decoration:none;">⬅️ Voltar para a página da planilha</a>
+  </footer>
+
+<script>
+  const btn        = document.getElementById('btn-sortear');
+  const input      = document.getElementById('lista-nomes');
+  const resultado  = document.getElementById('resultado');
+  const historico  = document.getElementById('historico');
+  const countDisp  = document.getElementById('count');
+  const btnDesfazer= document.getElementById('btn-desfazer');
+  const btnLimpar  = document.getElementById('btn-limpar');
+
+  let convocados = []; // pilha de sorteados na ordem
+
+  function atualizarContagem(){
+    const nomes = input.value.split('\n').filter(n => n.trim() !== "");
+    countDisp.innerText = nomes.length;
+  }
+
+  function renderHistorico(){
+    historico.innerHTML = "";
+    if(convocados.length === 0){
+      historico.innerHTML = '<li class="none">Ninguém convocado ainda.</li>';
+      return;
+    }
+    // mais recente no topo
+    [...convocados].reverse().forEach(nome => {
+      const li = document.createElement('li');
+      li.textContent = nome;
+      historico.appendChild(li);
+    });
+    // reindexa o counter para mostrar 1 = primeiro convocado
+    historico.style.counterReset = "h " + (convocados.length + 1);
+  }
+
+  btn.addEventListener('click', () => {
+    const nomes = input.value.split('\n').map(n=>n.trim()).filter(n => n !== "");
+
+    if(nomes.length === 0){
+      resultado.innerHTML = '<span class="vazio">Nenhum aventureiro na fila!</span>';
+      alert("Não há mais aventureiros na lista para convocar! 🛡️");
+      return;
+    }
+
+    const idx = Math.floor(Math.random() * nomes.length);
+    const sorteado = nomes[idx];
+
+    resultado.classList.remove('pop'); void resultado.offsetWidth;
+    resultado.innerHTML = "⚔️ " + sorteado + " foi convocado(a)!";
+    resultado.classList.add('pop');
+
+    convocados.push(sorteado);
+    nomes.splice(idx, 1);
+    input.value = nomes.join('\n');
+
+    atualizarContagem();
+    renderHistorico();
+  });
+
+  // Desfaz o último sorteio: devolve o nome para a lista ativa
+  btnDesfazer.addEventListener('click', () => {
+    if(convocados.length === 0){ alert("Não há convocação para desfazer."); return; }
+    const ultimo = convocados.pop();
+    const nomes = input.value.split('\n').filter(n => n.trim() !== "");
+    nomes.push(ultimo);
+    input.value = nomes.join('\n');
+    resultado.innerHTML = '<span class="vazio">Convocação de <b>'+ultimo+'</b> desfeita.</span>';
+    atualizarContagem();
+    renderHistorico();
+  });
+
+  // Reinicia o histórico (mantém o que estiver no textarea)
+  btnLimpar.addEventListener('click', () => {
+    if(convocados.length === 0 && input.value.trim()==="") return;
+    if(!confirm("Reiniciar a jornada? Isso limpa a lista de convocados.")) return;
+    convocados = [];
+    resultado.innerHTML = '<span class="vazio">Aguardando a convocação…</span>';
+    renderHistorico();
+    atualizarContagem();
+  });
+
+  atualizarContagem();
+  renderHistorico();
+</script>
+</body>
+</html>

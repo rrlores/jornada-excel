@@ -83,6 +83,13 @@
   .btn svg{width:22px;height:22px}
 
   .status{margin-top:18px;font-size:14px;color:var(--verde);font-weight:600;min-height:20px}
+  .botoes{display:flex;gap:14px;flex-wrap:wrap}
+  .btn-alt{
+    background:#fff;color:var(--verde);
+    border:2px solid var(--verde);
+    box-shadow:0 12px 24px -12px rgba(33,113,70,.4);
+  }
+  .btn-alt:hover{background:var(--verde);color:#fff;box-shadow:0 18px 30px -8px rgba(33,113,70,.6)}
 
   /* ---- Painel lateral ---- */
   .painel{
@@ -143,10 +150,16 @@
           </div>
         </div>
 
-        <a class="btn" id="btnDownload" href="#" role="button">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>
-          Baixar a planilha
-        </a>
+        <div class="botoes">
+          <a class="btn" id="btnDownload" href="#" role="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>
+            Baixar a planilha
+          </a>
+          <a class="btn btn-alt" id="btnSorteio" href="sorteio-guardioes.html" role="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h5l4 6-4 6H3"/><path d="M21 3h-5l-9 12H3"/><path d="M14 15l7 6"/><path d="M17 21h4v-4"/></svg>
+            Ir para o Sorteio
+          </a>
+        </div>
         <div class="status" id="status"></div>
       </div>
 
